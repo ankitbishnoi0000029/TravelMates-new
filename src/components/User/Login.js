@@ -1,3 +1,6 @@
+'use client'
+
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 
@@ -5,25 +8,33 @@ function Login() {
   const {
     register,
     handleSubmit,
-    watch,
     reset,
     formState: { errors },
   } = useForm();
 
+  
+const router = useRouter();
   const onSubmit = async (data) => {
     const fetchResponse = await fetch("http://localhost:3000/api/login", {
       method: "POST",
       body: JSON.stringify(data),
-    });
-    const message = await fetchResponse.json();
-
-    if (message.Result) {
+      headers: {
+          'Authorization': `Bearer ${res.token}`,
+          'Content-Type': 'application/json'
+      },
+  });
+  
+    const res = await fetchResponse.json();
+  
+    if (res.token) {
+      localStorage.setItem("token", res.token),
       alert("Login successful, now use your superpower");
       reset();
+      router.push('/');
     }
-
-    console.log(data)
   };
+
+  
 
   return (
     <div>

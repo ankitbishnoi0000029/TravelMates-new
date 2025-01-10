@@ -1,7 +1,8 @@
 import { dblink } from '@/backend/dbCon/connect';
 import { NextResponse } from 'next/server';
 import mongoose from 'mongoose';
-import { user } from '@/backend/models/user.model';
+import * as jwt  from 'jsonwebtoken'
+import User from '@/backend/models/user.model';
 
 
 export async function POST(request) {
@@ -18,7 +19,7 @@ export async function POST(request) {
         return NextResponse.json({message: "all fields required"})
     }
 
-    const findUser = await user.findOne({
+    const findUser = await User.findOne({
         email
     })
 
@@ -26,7 +27,10 @@ export async function POST(request) {
         return NextResponse.json({message: "this email does not exist"})
     }
 
-    return NextResponse.json({ data: findUser }, { status: 200 });
+    
+    var token = jwt.sign( {userID: findUser.id, }, process.env.NEXT_APP_SECRET_TOKEN);
+    return NextResponse.json({  token }, { status: 200 });
+    
   } catch (error) {
     console.error("Error saving data:", error.message);
     return NextResponse.json({ Result: "Error saving data", error: error.message }, { status: 500 });

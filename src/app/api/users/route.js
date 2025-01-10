@@ -1,7 +1,7 @@
 import { dblink } from "@/backend/dbCon/connect";
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
-import { user } from "@/backend/models/user.model";
+import User from "@/backend/models/user.model";
 
 export async function GET() {
   try {
@@ -13,7 +13,7 @@ export async function GET() {
       { status: 500 }
     );
   }
-  const dbdata = await user.find();
+  const dbdata = await User.find();
 
   return NextResponse.json({ Result: dbdata }, { status: 200 });
 }
@@ -32,8 +32,8 @@ export async function POST(request) {
   try {
     const inputdata = await request.json();
 
-    const newUser = new user(inputdata);
-
+    const newUser = new User(inputdata);
+     const savedata = await newUser.save()
     return NextResponse.json({ Result: true }, { status: 200 });
   } catch (error) {
     console.error("Error saving data:", error.message);
