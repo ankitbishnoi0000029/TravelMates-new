@@ -19,6 +19,7 @@ function Navbar() {
 
   return (
     <nav>
+
       <div className="w-full flex justify-between items-center bg-[#391965] border-b-2 border-pink-600 p-4">
         <div>
           <Link href="/">
@@ -30,6 +31,13 @@ function Navbar() {
               className="cursor-pointer"
             />
           </Link>
+
+      <div className="w-full flex z-50 justify-between p-4 items-center bg-[#391965] border-b-2 border-pink-600   ">
+        <div >
+    <Link href="/">
+          <Image width={96} height={72} alt="logo" src="./logo/Pixio.svg" />
+   </Link>
+ main
         </div>
 
         <div className="hidden lg:flex items-center space-x-4 text-white">
