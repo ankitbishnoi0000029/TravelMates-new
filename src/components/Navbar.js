@@ -16,8 +16,10 @@ function Navbar() {
   return (
     <nav>
       <div className="w-full flex z-50 justify-between p-4 items-center bg-[#391965] border-b-2 border-pink-600   ">
-        <div>
+        <div >
+    <Link href="/">
           <Image width={96} height={72} alt="logo" src="./logo/Pixio.svg" />
+   </Link>
         </div>
         <div className="flex md:flex hidden sm:block">
           <ul className="flex space-x-4 text-base items-center font-sans-serif font-sans font-medium text-white ">
