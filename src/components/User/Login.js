@@ -1,5 +1,7 @@
-'use client'
+"use client";
 
+import { NoNavbarLayout } from "@/app/layout";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -12,29 +14,26 @@ function Login() {
     formState: { errors },
   } = useForm();
 
-  
-const router = useRouter();
+  const router = useRouter();
   const onSubmit = async (data) => {
-    const fetchResponse = await fetch("http://localhost:3000/api/login", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-          'Authorization': `Bearer ${res.token}`,
-          'Content-Type': 'application/json'
-      },
-  });
-  
-    const res = await fetchResponse.json();
-  
-    if (res.token) {
-      localStorage.setItem("token", res.token),
-      alert("Login successful, now use your superpower");
+    axios;
+    const fetchResponse = await axios.post(
+      "http://localhost:3000/api/login",
+      data
+    );
+    console.log(fetchResponse.data.token);
+    if (fetchResponse.data.token) {
+      localStorage.setItem("token", fetchResponse.data.token),
+        alert("Login successful, now use your superpower");
       reset();
-      router.push('/');
+      router.push("/");
+      const secureResponse = await axios.get("http://localhost:3000/api/posts", {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+        },
+      })
     }
   };
-
-  
 
   return (
     <div>
@@ -86,14 +85,15 @@ const router = useRouter();
                 />
               </div>
               {errors.password && (
-                <p className="text-red-500 text-sm">{errors.password.message}</p>
+                <p className="text-red-500 text-sm">
+                  {errors.password.message}
+                </p>
               )}
 
               <div className="p-2 my-4 rounded-lg bg-pink-600">
                 <button
                   className="w-full p-2 text-white font-semibold rounded-lg"
-                  disabled={Object.keys(errors).length > 0}
-                >
+                  disabled={Object.keys(errors).length > 0}>
                   Sign In
                 </button>
               </div>
