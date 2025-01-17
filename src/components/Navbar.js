@@ -8,21 +8,10 @@ import Link from "next/link";
 import { FaUserCircle } from "react-icons/fa";
 import { IoChatbubbleEllipses } from "react-icons/io5";
 import { RiLogoutCircleRFill } from "react-icons/ri";
-import AuthGuard from "./auth/auth";
 
 function Navbar() {
-  const [token,settoken] = useState(false)
-    const newtoken = localStorage.getItem("token");
-   useEffect(()=>{
-    if(newtoken){
-      settoken(true)
-    }
-   },[])
- const handleLogout =() => {
-  localStorage.removeItem('token')
-  settoken(false)
- } 
  
+  
   
   return (
     <nav>
@@ -30,7 +19,7 @@ function Navbar() {
         <div>
           <Image width={96} height={72} alt="logo" src="./logo/Pixio.svg" />
         </div>
-        <div className="flex">
+        <div className="flex md:flex hidden sm:block">
           <ul className="flex space-x-4 text-base items-center font-sans-serif font-sans font-medium text-white ">
             <li className="flex items-center hover:cursor-pointer h-full px-2 hover:text-pink-600 ">
               <Link href="/">Home</Link>
@@ -73,17 +62,12 @@ function Navbar() {
             </li>
 
             <li className="px-2">
-              {/* {!token   ? <Link
-                  href="/login"
-                  className="px-5 flex items-center gap-1 py-2 rounded-md text-pink-600 bg-white mx-2  ">
-                  <FaUser />
-                  login
-                </Link> : <Link
+                <Link
                 href="/chat"
                 className="px-5 flex items-center gap-1 py-2 rounded-md text-white bg-pink-600">
                 <IoChatbubbleEllipses size={20} />
                 chat
-              </Link> } */}
+              </Link> 
               
             </li>
           </ul>
@@ -97,7 +81,7 @@ function Navbar() {
                   <FaUserCircle size={20} />
                   Profile
                 </Link>
-                {!token ? (
+                
                   <>
                   <Link
                   href="/signup"
@@ -112,19 +96,20 @@ function Navbar() {
                   login
                 </Link>
                   </>
-                ) :   <span
-                onClick={handleLogout}
-                   
-                    className="px-5 flex items-center gap-1 py-2 rounded-md  bg-pink-600 text-white mx-2">
-                  <RiLogoutCircleRFill size={20} />
-                    logout
-                  </span>  }
-                <IoMenu className="h-7  lg:hidden md:hidden w-8 m-3 hover:cursor-pointer " />
-            
+                  <span
+              
+                    onClick={()=> localStorage.removeItem('token')}
+                     className="px-5 flex items-center  gap-1 py-2 rounded-md  bg-pink-600 text-white mx-2">
+                   <RiLogoutCircleRFill size={20} />
+                     logout
+                   </span> 
+                 
+                    
               </span>
             </div>
           </div>
         </div>
+                <IoMenu className="h-7 hover:rotate-180 lg:hidden md:hidden w-8 m-3 hover:cursor-pointer " />
       </div>
     </nav>
   );

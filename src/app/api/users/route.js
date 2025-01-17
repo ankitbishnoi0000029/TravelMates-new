@@ -10,14 +10,12 @@ export async function GET() {
     console.error("MongoDB connection error:", error.message);
     return NextResponse.json(
       { Result: "Error connecting to database", error: error.message },
-      { status: 500 }
+      { status: 500 } 
     );
-  }
+  } 
   const dbdata = await User.find();
-
   return NextResponse.json({ Result: dbdata }, { status: 200 });
 }
-// this is database in data store function
 
 export async function POST(request) {
   try {
@@ -31,7 +29,6 @@ export async function POST(request) {
   }
   try {
     const inputdata = await request.json();
-
     const newUser = new User(inputdata);
      const savedata = await newUser.save()
     return NextResponse.json({ Result: true }, { status: 200 });
