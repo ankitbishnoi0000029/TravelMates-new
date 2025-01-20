@@ -1,7 +1,14 @@
+'use client'
+import { userLogin } from "@/redux/reducers/reducer";
 import React from "react";
 import { BsSendFill } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
 
 function Chat() {
+function handleclick(){
+ 
+}
+
   return (
     <section className="bg-[#4a2184] text-white min-h-screen flex items-center justify-center">
     <div className="container p-4">
@@ -11,7 +18,7 @@ function Chat() {
           <h2 className="text-lg font-semibold">Chat Users</h2>
           <ul className="space-y-2">
             <li className="p-3 rounded-lg bg-[#4a2184] cursor-pointer hover:bg-[#614aa8]">
-              User 1
+              User {count}
             </li>
             <li className="p-3 rounded-lg bg-[#4a2184] cursor-pointer hover:bg-[#614aa8]">
               User 2
@@ -46,13 +53,14 @@ function Chat() {
               className="flex-1 p-3 rounded-lg bg-[#391965] text-white outline-none focus:ring-2 focus:ring-[#614aa8]"
               placeholder="Type a message..."
             />
-            <button
-              type="submit"
+            <span
+            onClick={handleclick}
+              
               className="p-3 items-center gap-2 flex bg-[#614aa8] rounded-lg hover:bg-[#814ac8] transition"
             >
               Send
 <BsSendFill className="text-pink-600 " />
-            </button>
+            </span>
           </form>
         </div>
       </div>

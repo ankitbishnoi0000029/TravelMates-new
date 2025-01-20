@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import SideBar_profile from "./SideBar_profile";
-import { Postdata } from "@/Lib/dataGetApi.js";
 import PostCard from "./PostCard";
 import { PostApi } from "@/Lib/dataGetApi.js";
 

@@ -4,6 +4,9 @@ import axios from "axios";
   
 export const PostApi = async () => {
     const token =  localStorage.getItem('token');
+
+    console.log('tken ..........', token);
+    
        
     // if (!token) {
     //   console.error("No token found! Please log in again.");

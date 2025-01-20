@@ -1,10 +1,12 @@
 "use client";
 
 import { NoNavbarLayout } from "@/app/layout";
+import { userLogin } from "@/redux/reducers/reducer";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 
 function Login() {
   const {
@@ -13,25 +15,21 @@ function Login() {
     reset,
     formState: { errors },
   } = useForm();
-
+  const dispatch = useDispatch();
   const router = useRouter();
+
   const onSubmit = async (data) => {
-    axios;
-    const fetchResponse = await axios.post(
-      "http://localhost:3000/api/login",
-      data
-    );
-    console.log(fetchResponse.data.token);
+    const fetchResponse = await axios.post("http://localhost:3000/api/login", data);
     if (fetchResponse.data.token) {
-      localStorage.setItem("token", fetchResponse.data.token),
-        alert("Login successful, now use your superpower");
+      dispatch(userLogin(true));
+      alert("Login successful, now use your superpower");
       reset();
-      router.push("/");
-      const secureResponse = await axios.get("http://localhost:3000/api/posts", {
+      await axios.get("http://localhost:3000/api/posts", {
         headers: {
-          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          Authorization: `Bearer ${fetchResponse.data.token}`,
         },
-      })
+      });
+      router.push("/");
     }
   };
 
@@ -65,9 +63,7 @@ function Login() {
                   className="border rounded-lg w-[65%] border-white/10 p-2.5 px-3.5 outline-none bg-transparent"
                 />
               </div>
-              {errors.email && (
-                <p className="text-red-500 text-sm">{errors.email.message}</p>
-              )}
+              {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
 
               <div className="flex items-center justify-between">
                 <label>Enter Your Password</label>
@@ -84,16 +80,13 @@ function Login() {
                   className="border rounded-lg w-[65%] border-white/10 p-2.5 px-3.5 outline-none bg-transparent"
                 />
               </div>
-              {errors.password && (
-                <p className="text-red-500 text-sm">
-                  {errors.password.message}
-                </p>
-              )}
+              {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
 
               <div className="p-2 my-4 rounded-lg bg-pink-600">
                 <button
                   className="w-full p-2 text-white font-semibold rounded-lg"
-                  disabled={Object.keys(errors).length > 0}>
+                  disabled={Object.keys(errors).length > 0}
+                >
                   Sign In
                 </button>
               </div>
