@@ -9,16 +9,19 @@ import { RiLogoutCircleRFill } from "react-icons/ri";
 import Image from "next/image";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
-import { userLogin } from "@/redux/reducers/reducer";
+import { useRouter } from "next/navigation";
+import { logout } from "@/redux/reducers/reducer";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const count = useSelector((state) => state.counter.usertoken);
+ const usertoken = useSelector((state) => state.MyStore.usertoken);
   const dispatch = useDispatch();
+  const router = useRouter()
 
   const handleLogout = () => {
-    dispatch(userLogin(false));
-    setMenuOpen(false);  // Close the menu when logging out
+    setMenuOpen(false);  
+    dispatch(logout())
+    router.push('/login')
   };
 
   return (
@@ -29,7 +32,7 @@ function Navbar() {
             width={96}
             height={72}
             alt="logo"
-            src="/logo/Pixio.svg"  // Changed to use /public path
+            src="/logo/Pixio.svg"  
             className="cursor-pointer"
           />
         </Link>
@@ -52,7 +55,7 @@ function Navbar() {
               <Link href="/">Help</Link>
             </li>
 
-            {count ? (
+            {usertoken ? (
               <div className="flex items-center space-x-4">
                 <li>
                   <Link
@@ -108,7 +111,7 @@ function Navbar() {
       {menuOpen && (
         <div className="lg:hidden bg-[#391965] text-white">
           <ul className="flex flex-col space-y-2 p-4 font-medium">
-            {count ? (
+            {usertoken ? (
               <>
                 <li className="hover:text-pink-600">
                   <Link href="/" onClick={() => setMenuOpen(false)}>

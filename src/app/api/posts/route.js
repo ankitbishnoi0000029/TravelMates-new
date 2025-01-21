@@ -28,55 +28,6 @@ export async function GET(request) {
   }
 }
       
-  // try {
-  //   const authHeader = request.headers.get("Authorization");
-  //   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-  //     return NextResponse.json(
-  //       { Result: "Authorization token missing or invalid" },
-  //       { status: 401 }
-  //     );
-  //   }
-
-  //   const authToken = authHeader.replace("Bearer ", "").trim();
-
-  //   const secretToken = process.env.NEXT_APP_SECRET_TOKEN;
-  //   if (!secretToken) {
-  //     throw new Error("Secret token is not configured");
-  //   }
-  //   const decoded = jwt.decode(authToken, { complete: true });
-
-  //   let verifiedToken;
-  //   try {
-  //     verifiedToken = jwt.verify(authToken, secretToken); 
-  //   } catch (error) {
-  //     return NextResponse.json(
-  //       { Result: "Invalid token", error: error.message },
-  //       { status: 401 }
-  //     );
-    // }
-
-   
-  //   const dblink = process.env.DATABASE_URL;
-  //   if (!dblink) {
-  //     throw new Error("Database URL is not configured");
-  //   }
-  //   if (!mongoose.connection.readyState) {
-  //     await mongoose.connect(dblink);
-  //   }
-
-  //   const dbdata = await Post.find()
-  //     // .populate('user');
- 
-  //   return NextResponse.json({ Result: "success", data: dbdata }, { status: 200 });
-  // }
-  // } catch (error) {
-  //   console.error("Error occurred during GET request:", error.message);
-  //   return NextResponse.json(
-  //     { Result: "Internal server error", error: error.message },
-  //     { status: 500 }
-  //   );
-  // }
-// }
 export async function POST(request) {
   try {
     await mongoose.connect(dblink);
@@ -108,8 +59,8 @@ export async function POST(request) {
     const inputdata = await request.json();
     
     const newPost = new Post({
-      ...inputdata,   // Spread the input data into the Post
-      user: userID,   // Add the userID to associate the post with the user
+      ...inputdata, 
+      user: userID,   
     }); 
   const post = await  newPost.save()
 

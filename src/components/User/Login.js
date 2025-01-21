@@ -4,11 +4,14 @@ import { NoNavbarLayout } from "@/app/layout";
 import { userLogin } from "@/redux/reducers/reducer";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import Alert from "@mui/material/Alert";
+import { Snackbar } from "@mui/material";
 
 function Login() {
+  const [login, setLogin] = useState(false); 
   const {
     register,
     handleSubmit,
@@ -18,36 +21,53 @@ function Login() {
   const dispatch = useDispatch();
   const router = useRouter();
 
+  const count  =useSelector(state=>state);
+console.log(count,">>>>")
   const onSubmit = async (data) => {
-    const fetchResponse = await axios.post("http://localhost:3000/api/login", data);
-    if (fetchResponse.data.token) {
-      dispatch(userLogin(true));
-      alert("Login successful, now use your superpower");
-      reset();
-      await axios.get("http://localhost:3000/api/posts", {
-        headers: {
-          Authorization: `Bearer ${fetchResponse.data.token}`,
-        },
-      });
-      router.push("/");
+    try {
+      const fetchResponse = await axios.post("http://localhost:3000/api/login", data);
+
+      if (fetchResponse.data.token) {
+        dispatch(userLogin());
+        setLogin(true); 
+        reset(); 
+
+        await axios.get("http://localhost:3000/api/posts", {
+          headers: {
+            Authorization: `Bearer ${fetchResponse.data.token}`,
+          },
+        });
+
+        router.push("/");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
     }
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") return;
+    setLogin(false); 
   };
 
   return (
     <div>
+      
       <div className="w-full bg-[url('/banner/banner_bg.png')] text-white mx-auto flex justify-center items-center">
         <div className="text-3xl max-w-fit text-center p-10">
-          <h3 className="font-medium pb-2">Login your Account</h3>
+          <h3 className="font-medium pb-2">Login to Your Account</h3>
           <p className="text-lg text-slate-400">
             Login to your account and find your mate with us!
           </p>
         </div>
       </div>
 
+     
       <div className="bg-[#391965] md:grid-cols-2 items-center text-white p-6">
         <div className="max-w-xl mx-auto rounded-lg p-6 mt-4 md:mt-0">
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="space-y-4">
+             
               <div className="flex items-center justify-between">
                 <label>Enter your Email</label>
                 <input
@@ -65,6 +85,7 @@ function Login() {
               </div>
               {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
 
+             
               <div className="flex items-center justify-between">
                 <label>Enter Your Password</label>
                 <input
@@ -94,6 +115,18 @@ function Login() {
           </form>
         </div>
       </div>
+
+    
+      <Snackbar
+        open={login}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: "100%" }}>
+          Login successful!
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

@@ -4,23 +4,22 @@ const initialState = {
   value: 0,
 }
 
-export const counterSlice = createSlice({
-  name: 'counter',
+export const ReduxSlice = createSlice({
+  name: 'Auth',
   initialState : {
-    usertoken : false
+    usertoken : false,
   } ,
   reducers: {
-    incrementByAmount: (state, action) => {
-      state.value += action.payload
+    userLogin: (state) => {
+      state.usertoken = true
     },
-    userLogin: (state,action) => {
-      state.usertoken = action.payload
-      console.log(state.value);
-      
+    logout : (state) =>{
+      state.usertoken = false;
     }
+
   },
 })
 
-export const { userLogin } = counterSlice.actions
+export const { userLogin,logout } = ReduxSlice.actions
 
-export default counterSlice.reducer
+export default ReduxSlice.reducer
