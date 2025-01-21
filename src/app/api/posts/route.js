@@ -62,6 +62,7 @@ export async function POST(request) {
       ...inputdata, 
       user: userID,   
     }); 
+    
   const post = await  newPost.save()
 
     return NextResponse.json({ Result: true, post }, { status: 200 });

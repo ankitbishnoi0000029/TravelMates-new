@@ -14,16 +14,16 @@ function Chat() {
         <div className="col-span-4 p-4 rounded-lg flex flex-col space-y-4">
           <h2 className="text-lg font-semibold">Chat Users</h2>
           <ul className="space-y-2">
-            <li className="p-3 rounded-lg bg-[#4a2184] cursor-pointer hover:bg-[#614aa8]">
+            <li className="p-3 rounded-lg bg-pink-600 text-white hover:bg-white hover:text-pink-600 ">
               User 
             </li>
-            <li className="p-3 rounded-lg bg-[#4a2184] cursor-pointer hover:bg-[#614aa8]">
+            <li className="p-3 rounded-lg bg-pink-600 text-white hover:bg-white hover:text-pink-600 ">
               User 2
             </li>
-            <li className="p-3 rounded-lg bg-[#4a2184] cursor-pointer hover:bg-[#614aa8]">
+            <li className="p-3 rounded-lg bg-pink-600 text-white hover:bg-white hover:text-pink-600 ">
               User 3
             </li>
-            <li className="p-3 rounded-lg bg-[#4a2184] cursor-pointer hover:bg-[#614aa8]">
+            <li className="p-3 rounded-lg bg-pink-600 text-white hover:bg-white hover:text-pink-600 ">
               User 4
             </li>
           </ul>
@@ -32,10 +32,10 @@ function Chat() {
         <div className="col-span-8 p-4 bg-[#4a2184] rounded-lg flex flex-col">
           <div className="flex-1 overflow-y-auto p-4 bg-[#391965] rounded-lg">
             <div className="space-y-3">
-              <div className="bg-[#614aa8] p-3 rounded-lg self-start max-w-xs">
+              <div className="bg-white text-pink-600 p-3 rounded-lg self-start max-w-xs">
                 Hello! How are you?
               </div>
-              <div className="bg-[#814ac8] p-3 rounded-lg self-end max-w-xs">
+              <div className="float-end bg-pink-600 p-3 rounded-lg self-end max-w-xs">
                 I'm good, thanks! How about you?
               </div>
             </div>
@@ -44,7 +44,7 @@ function Chat() {
           <form className="mt-4 flex items-center space-x-2">
             <input
               type="text"
-              className="flex-1 p-3 rounded-lg bg-[#391965] text-white outline-none focus:ring-2 focus:ring-[#614aa8]"
+              className="flex-1 p-3 rounded-lg text-pink-600 bg-white outline-none focus:ring-2 focus:ring-[#614aa8]"
               placeholder="Type a message..."
             />
             <span

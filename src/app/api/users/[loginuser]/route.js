@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
  
 export async function GET(request) {
-   const loginUserToken = request.headers.get("Authorization");
+   const loginUserToken = request.headers;
 console.log(loginUserToken);
 
-  return NextResponse.json({ Result: loginUserToken},{status:200})
+  return NextResponse.json({ Result: "hello"},{status:200})
 }
