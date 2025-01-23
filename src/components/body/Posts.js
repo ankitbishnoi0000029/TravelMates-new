@@ -16,12 +16,8 @@ function Posts() {
       });
     }, [userToken]); 
  if(!userToken)return(null)
-  return (
-   
-  
-        
+  return (  
         <section>
- 
         <div className="bg-[#391965] flex items-center justify-center text-white p-6">
           <h1 className="text-lg font-sans font-bold">All Posts</h1>
         </div>

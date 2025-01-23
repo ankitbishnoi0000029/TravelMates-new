@@ -2,7 +2,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import Register from "../User/Register";
 import FromHeader from "../User/FromHeader";
 import Registerform from "../User/Registerform";
 
@@ -11,7 +10,7 @@ function Banner() {
  const userToken = useSelector((state) => state.MyStore.usertoken);
 
   const onSubmit = async (data) => {
-    const postdata = await fetch("http://localhost:3000/api/posts/getpost", {
+    const postdata = await fetch("http://localhost:3000/api/posts", {
       method: "POST",
       body: JSON.stringify(data),
     });
