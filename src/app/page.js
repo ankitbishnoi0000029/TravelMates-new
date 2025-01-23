@@ -1,13 +1,14 @@
-import Banner from "@/components/body/Banner";
-import Posts from "@/components/body/Posts";
-import Totalusers from "@/components/body/Totalusers";
+import Banner from '@/components/body/Banner'
+import Posts from '@/components/body/Posts'
+import React from 'react'
 
-export default function Home() {
+function page() {
   return (
-<div >
-<Banner /> 
-<Posts />
-<Totalusers />
-</div>
-  );
+   <>
+   <Banner />
+   <Posts />
+   </>
+  )
 }
+
+export default page

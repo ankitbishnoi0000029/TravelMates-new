@@ -1,6 +1,14 @@
-import React from "react";
+'use client'
+import { userProfile } from "@/Lib/dataGetApi.js";
+import React, { useEffect } from "react";
 
-function UserProfile() {
+ function UserProfile() {
+ 
+useEffect(()=>{
+  userProfile();
+},[])
+  
+
   return (
     <section className="bg-[#4a2184] text-white">
       <div className="container mx-auto p-4">
