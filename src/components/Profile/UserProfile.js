@@ -1,12 +1,22 @@
 'use client'
 import { userProfile } from "@/Lib/dataGetApi.js";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
  function UserProfile() {
- 
-useEffect(()=>{
-  userProfile();
-},[])
+  const userToken = useSelector((state) => state.MyStore.usertoken);
+  const [user, setUser] = useState();
+  const getProfile = async() => {
+    const data = await userProfile();
+    const userId = localStorage.setItem('userId',data._id)
+    setUser(data)
+    
+  }
+   useEffect(() => {
+    if(!userToken) return
+     getProfile()
+
+    }, [userToken]); 
   
 
   return (
@@ -18,7 +28,7 @@ useEffect(()=>{
               <div className="flex flex-col items-center">
                 <div className="relative w-36 h-36 rounded-full overflow-hidden border-4 border-pink-500">
                   <img
-                    src="https://via.placeholder.com/100"
+                    src='https://unsplash.com/photos/woman-wearing-black-shirt-2rIs8OH5ng0'
                     alt="Profile Picture"
                     className="object-cover w-full h-full"
                   />
@@ -26,8 +36,10 @@ useEffect(()=>{
                     ★
                   </span>
                 </div>
-                <h2 className="text-lg font-semibold pt-4">Jenna Smith</h2>
-                <p className="text-gray-500 my-3 text-center">Art Director</p>
+                <h2 className="text-lg font-semibold pt-4">{user?.name}</h2>
+                <p className="text-gray-500 my-3 text-center">{user?.email}</p>
+                <p className="text-gray-500 my-3 text-center">{user?.state}</p>
+
                 <button
                   className="bg-pink-500 text-white px-6 py-2 rounded-full mt-3 hover:bg-pink-600 transition"
                   aria-label="Follow Jenna Smith"

@@ -20,6 +20,7 @@ function Navbar() {
 
   const handleLogout = () => {
     setMenuOpen(false);  
+    localStorage.removeItem("token")
     dispatch(logout())
     router.push('/login')
   };

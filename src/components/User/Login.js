@@ -22,22 +22,14 @@ function Login() {
   const router = useRouter();
 
   const count  =useSelector(state=>state);
-console.log(count,">>>>")
   const onSubmit = async (data) => {
     try {
       const fetchResponse = await axios.post("http://localhost:3000/api/login", data);
-
       if (fetchResponse.data.token) {
         dispatch(userLogin());
+        localStorage.setItem("token", fetchResponse.data.token)
         setLogin(true); 
         reset(); 
-
-        await axios.get("http://localhost:3000/api/posts", {
-          headers: {
-            Authorization: `Bearer ${fetchResponse.data.token}`,
-          },
-        });
-
         router.push("/");
       }
     } catch (error) {

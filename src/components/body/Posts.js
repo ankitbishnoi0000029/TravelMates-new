@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import SideBar_profile from "./SideBar_profile";
-import PostCard from "./PostCard";
+// import PostCard from "./PostCard";
 import { PostApi } from "@/Lib/dataGetApi.js";
 import { useSelector } from "react-redux";
+const PostCard = React.lazy(() => import("./PostCard"))
 
 function Posts() {
   const userToken = useSelector((state) => state.MyStore.usertoken);
@@ -32,11 +33,13 @@ function Posts() {
       
            
             <div className="lg:w-3/4 w-full lg:h-[100vh] overflow-y-auto scroll_css">
+            <Suspense fallback={<h1>loading..........</h1>}>
               {post?.map((item, index) => (
                 <div key={index}>
                   <PostCard item={item} data={item.from} />
                 </div>
               ))}
+              </Suspense>
             </div>
           </div>
         </div>

@@ -8,15 +8,30 @@ import Registerform from "../User/Registerform";
 function Banner() {
   const {register,reset,handleSubmit,formState: { errors },} = useForm();
  const userToken = useSelector((state) => state.MyStore.usertoken);
-
-  const onSubmit = async (data) => {
-    const postdata = await fetch("http://localhost:3000/api/posts", {
+ const token = localStorage.getItem("token")
+ const onSubmit = async (data) => {
+  try {
+    const response = await fetch("http://localhost:3000/api/posts", {
       method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
       body: JSON.stringify(data),
     });
-    alert("your post create successfully");
+
+    if (!response.ok) {
+      throw new Error('Failed to create post');
+    }
+
+    alert("Your post was created successfully");
     reset();
-  };
+  } catch (error) {
+    console.error("Error creating post:", error);
+    alert("An error occurred while creating the post.");
+  }
+};
+
 
   return (
     <section>

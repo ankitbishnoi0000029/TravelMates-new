@@ -1,13 +1,17 @@
 import React from "react";
-import { BsThreeDots } from "react-icons/bs";
+import { BsChatHeart, BsThreeDots } from "react-icons/bs";
 import { CiHeart } from "react-icons/ci";
 import { IoMdShareAlt } from "react-icons/io";
 import { FaRegCommentDots } from "react-icons/fa6";
+import Link from "next/link";
 
 function PostCard({ item }) {
+    const userId = localStorage.getItem('userId')
+
+    
+    
   return (
     <div>
-    
       <div className="text-white flex items-center justify-between">
         <div className="flex items-center">
           <div className="w-12 h-12 overflow-hidden rounded-full">
@@ -47,6 +51,9 @@ function PostCard({ item }) {
         <button className="w-full sm:w-auto flex-1 rounded-md p-3 sm:p-4 bg-white flex justify-center items-center gap-2 transition hover:bg-pink-50">
           Comment <FaRegCommentDots /> <span className="text-blue-700">1.3k</span>
         </button>
+        <Link href={`/chat/${userId}/resever/${item.user?._id}`} className="w-full sm:w-auto flex-1 rounded-md p-3 sm:p-4 bg-white flex justify-center items-center gap-2 transition hover:bg-pink-50">
+          Chat <BsChatHeart /> 
+        </Link>
         <button className="w-full sm:w-auto flex-1 rounded-md p-3 sm:p-4 bg-white flex justify-center items-center gap-2 transition hover:bg-pink-50">
           Share <IoMdShareAlt /> <span className="text-blue-700">500</span>
         </button>
