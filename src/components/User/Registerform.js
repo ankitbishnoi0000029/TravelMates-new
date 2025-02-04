@@ -1,14 +1,11 @@
+import { useRouter } from 'next/navigation';
 import React from 'react'
 import { useForm } from 'react-hook-form';
+import FromHeader from './FromHeader';
 
 function Registerform() {
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: { errors },
-      } = useForm();
-    
+  const router = useRouter();
+    const {register,handleSubmit,reset,formState: { errors },} = useForm();
       const onSubmit = async (data) => {
         const fetchResponse = await fetch("http://localhost:3000/api/users", {
           method: "POST",
@@ -18,17 +15,19 @@ function Registerform() {
     
         if (message.Result) {
           alert("Register successful, now use your superpower");
+          router.push('/login')
           reset();
         }
-    
-        console.log(data);
       };
   return (
-    <div className=" md:grid-cols-2 items-center text-white ">
-    <div className="max-w-xl mx-auto rounded-lg mt-4 md:mt-0">
+    <div className="flex justify-center  md:grid-cols-2 items-center text-white  ">
+    <div className="max-w-xl mx-auto rounded-lg mt-4 md:mt-0  border-2 backdrop-blur-3xl border-white p-4 ">
+      <div className='flex items-center justify-center  mb-2 '>
+      <FromHeader />
+      </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-4">
-          {/* Name */}
+         
           <div className="flex items-center justify-between">
             <label>Enter Your Name</label>
             <input
@@ -106,7 +105,7 @@ function Registerform() {
           )}
 
           {/* Gender */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center  justify-between">
             <label>Select Your Gender</label>
             <select
               {...register("gender", {
@@ -116,75 +115,15 @@ function Registerform() {
               defaultValue=""
             >
               <option value="">Select your gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
+              <option  className='text-pink-600' value="male">Male</option>
+              <option className='text-pink-600' value="female">Female</option>
+              <option className='text-pink-600' value="other">Other</option>
             </select>
           </div>
           {errors.gender && (
             <p className="text-red-500 text-sm">{errors.gender.message}</p>
           )}
-
-          {/* Country */}
-          <div className="flex items-center justify-between">
-            <label>Select Your Country</label>
-            <select
-              {...register("country", {
-                required: "Country is required",
-              })}
-              className="border rounded-lg w-[65%] border-white/10 p-2.5 px-3.5 outline-none bg-transparent"
-              defaultValue=""
-            >
-              <option value="">Select your country</option>
-              <option value="usa">USA</option>
-              <option value="india">India</option>
-              <option value="pakistan">Pakistan</option>
-            </select>
-          </div>
-          {errors.country && (
-            <p className="text-red-500 text-sm">{errors.country.message}</p>
-          )}
-
-          {/* State */}
-          <div className="flex items-center justify-between">
-            <label>Select Your State</label>
-            <select
-              {...register("state", {
-                required: "State is required",
-              })}
-              className="border rounded-lg w-[65%] border-white/10 p-2.5 px-3.5 outline-none bg-transparent"
-              defaultValue=""
-            >
-              <option value="">Select your state</option>
-              <option value="punjab">Punjab</option>
-              <option value="haryana">Haryana</option>
-              <option value="delhi">Delhi</option>
-            </select>
-          </div>
-          {errors.state && (
-            <p className="text-red-500 text-sm">{errors.state.message}</p>
-          )}
-
-          {/* City */}
-          <div className="flex items-center justify-between">
-            <label>Select Your City</label>
-            <select
-              {...register("city", {
-                required: "City is required",
-              })}
-              className="border rounded-lg w-[65%] border-white/10 p-2.5 px-3.5 outline-none bg-transparent"
-              defaultValue=""
-            >
-              <option value="">Select your city</option>
-              <option value="punjab">Punjab</option>
-              <option value="haryana">Haryana</option>
-              <option value="delhi">Delhi</option>
-            </select>
-          </div>
-          {errors.city && (
-            <p className="text-red-500 text-sm">{errors.city.message}</p>
-          )}
-
+{/* 
           {/* Address (updated) */}
           <div className="flex items-center justify-between">
             <label>Enter Full Address</label>
@@ -203,15 +142,23 @@ function Registerform() {
 
           <div className="p-2 my-4 rounded-lg bg-pink-600">
             <button
-              className="w-full p-2 text-white font-semibold rounded-lg"
-              disabled={Object.keys(errors).length > 0}
-            >
+              className="w-full p-2 text-white font-semibold rounded-lg">
               Sign up
             </button>
           </div>
         </div>
       </form>
-    </div>
+        </div>
+      <div className="absolute py-4 bottom-0  " >
+                <p className="text-sm">
+                  Already Registered
+                  <span
+                    onClick={() => router.push("/login")}
+                    className=" text-pink-600 text-sm font-bold hover:cursor-pointer hover:text-blue-800 ">
+                    Login here ...
+                  </span>
+                </p>
+              </div>
   </div>
   )
 }

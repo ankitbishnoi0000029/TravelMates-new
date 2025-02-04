@@ -2,28 +2,25 @@
 
 import React, { Suspense, useEffect, useState } from "react";
 import SideBar_profile from "./SideBar_profile";
-// import PostCard from "./PostCard";
 import { PostApi } from "@/Lib/dataGetApi.js";
 import { useSelector } from "react-redux";
 const PostCard = React.lazy(() => import("./PostCard"))
 
 function Posts() {
-  const userToken = useSelector((state) => state.MyStore.usertoken);
+  const tokenTrue = useSelector((state) => state.MyStore.usertoken);
+  const userToken = useSelector((state) => state.MyStore.userJwtToken);
+
   const [post, setPost] = useState([]);
    useEffect(() => {
-    if(!userToken) return
-     PostApi().then((res) => {
+    if(!tokenTrue) return
+     PostApi(userToken).then((res) => {
        setPost(res.data);
       });
-    }, [userToken]); 
- if(!userToken)return(null)
+    }, [tokenTrue]); 
+ if(!tokenTrue)return(null)
   return (  
         <section>
-        <div className="bg-[#391965] flex items-center justify-center text-white p-6">
-          <h1 className="text-lg font-sans font-bold">All Posts</h1>
-        </div>
-      
-      
+        
         <div className="py-4 px-4 md:px-8 lg:px-12 bg-[url('/banner/banner_bg.png')]">
           <div className="flex flex-col lg:flex-row">
         
@@ -32,7 +29,7 @@ function Posts() {
             </div>
       
            
-            <div className="lg:w-3/4 w-full lg:h-[100vh] overflow-y-auto scroll_css">
+            <div className="lg:w-3/4 w-full lg:h-[100vh] overflow-scroll scroll_css myScroll">
             <Suspense fallback={<h1>loading..........</h1>}>
               {post?.map((item, index) => (
                 <div key={index}>

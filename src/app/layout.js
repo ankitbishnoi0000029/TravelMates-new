@@ -6,18 +6,21 @@ import Totalusers from "@/components/body/Totalusers";
 import { Provider } from "react-redux";
 import { store, persistor } from "@/redux/store/store";
 import { PersistGate } from "redux-persist/integration/react";
+import { usePathname } from "next/navigation";
 
 export default function RootLayout({ children }) {
+  const path = usePathname()
   return (
     <html lang="en">
       <body>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            <Navbar />
-        
-            {children}
+
+          {path !== "/login" && path !== "/signup" && <Navbar />}
+
           
-            <Totalusers />
+            {/* <Navbar /> */}
+            {children}
           </PersistGate>
         </Provider>
       </body>

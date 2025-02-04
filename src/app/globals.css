@@ -2,6 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
-.scroll_css::-webkit-scrollbar {
+/* .myScroll::-webkit-scrollbar {
     display: none;
+} */
+.p-0.MuiBox-root.css-1q2ao40 {
+  padding: 0px;
+  border: none;
+  background-color: transparent;
+}
+
+body::-webkit-scrollbar {
+  width: 6px;
+  height: 3px;
+}
+ 
+body::-webkit-scrollbar-thumb {
+  background-color: purple;
+  border-radius: 10px;
+}
+.myScroll::-webkit-scrollbar {
+    display: none
+  }
+  
+  .myScroll::-webkit-scrollbar-thumb {
+    background-color: purple;
+    border-radius: 2px;
+  }
+  
+  .myScroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 2px;
+  }
+  
+.MuiPopper-root {
+    position: relative;
+    margin-bottom: 40px;
+}
+.navbar-animation {
+  position: fixed; 
+  animation: slideDown 0.9s ease-in-out forwards; 
+  top: 0;
+  left: 0;
+  width: 100%;
+ 
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }

@@ -37,7 +37,7 @@ export async function POST(request) {
   }
   try {
     const authHeader = request.headers.get("Authorization");
-console.log("token this  is post ",authHeader);
+
 
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -52,12 +52,10 @@ console.log("token this  is post ",authHeader);
       throw new Error("Secret token is not configured");
     }
 
-    console.log("Secret token:", secretToken);
-    console.log("Auth token:", authToken);
 
     const decoded = jwt.decode(authToken, { complete: true });
     const {userID} = decoded.payload
-    console.log("Decoded token payload:<<<<<<<, ", userID);
+    
 
     const inputdata = await request.json();
     
@@ -74,4 +72,27 @@ console.log("token this  is post ",authHeader);
     return NextResponse.json({ Result: "Error saving data", error: error.message }, { status: 500 });
   }
 
+}
+
+export async function DELETE(request) {
+  try {
+    await mongoose.connect(dblink);
+    console.log("Database connection successful");
+  } catch (error) {
+    console.error("Database connection error:", error);
+    return NextResponse.json(
+      { error: "Database connection failed" },
+      { status: 500 }
+    );
+  }
+  try {
+    const data = await Post.find().populate('user');
+    return NextResponse.json({ data: data }, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch posts" },
+      { status: 500 }
+    );
+  }
 }

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { type } from 'node:os';
 
 const UserSchema = new mongoose.Schema({
     name : {
@@ -21,10 +22,11 @@ const UserSchema = new mongoose.Schema({
         type : String
     },
     country : String,
-    state : {
+   
+    socketUserId :{
         type : String
     },
-    city : String,
+   
     addresh : String,
     password : String,
     confirmpassword : String

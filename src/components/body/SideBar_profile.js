@@ -5,7 +5,7 @@ function SideBar_profile() {
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
   return (
-    <div className="col-span-3  p-4">
+    <div className="col-span-3 p-4">
       <div className=" rounded-lg bg-[#391965] shadow-xl shadow-gray-500  sh p-8 mt-5">
         <div className='bg-[#391965] flex items-center justify-center text-white p-6' >
             <h1 className='text-lg font-sans font-bold  ' >

@@ -8,6 +8,8 @@ export const ReduxSlice = createSlice({
   name: 'Auth',
   initialState : {
     usertoken : false,
+    userJwtToken: "",
+    userId : "",
   } ,
   reducers: {
     userLogin: (state) => {
@@ -15,11 +17,17 @@ export const ReduxSlice = createSlice({
     },
     logout : (state) =>{
       state.usertoken = false;
+    },
+    loginUserToken : (state,action) =>{
+      state.userJwtToken = action.payload;
+    },
+    userId : (state,action) =>{
+      state.userId = action.payload;
     }
 
   },
 })
 
-export const { userLogin,logout } = ReduxSlice.actions
+export const {loginUserToken, userLogin,logout ,userId } = ReduxSlice.actions
 
 export default ReduxSlice.reducer

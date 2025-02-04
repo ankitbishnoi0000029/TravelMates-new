@@ -1,18 +1,28 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { BsChatHeart, BsThreeDots } from "react-icons/bs";
 import { CiHeart } from "react-icons/ci";
 import { IoMdShareAlt } from "react-icons/io";
-import { FaRegCommentDots } from "react-icons/fa6";
+import { FaRegCommentDots } from "react-icons/fa";
 import Link from "next/link";
+import { Popper, Box } from "@mui/material";
+import Showcomment from "../Comment/Showcomment";
+import { useSelector } from "react-redux";
+import { useParams } from "next/navigation";
 
 function PostCard({ item }) {
-    const userId = localStorage.getItem('userId')
+  const [open, setOpen] = useState(false);
+  const [commentdata, setComment] = useState();
+  const anchorEl = useRef(null);
+  const path = useParams();
 
-    
-    
+  const userId = useSelector((state) => state.MyStore.userId);
+  const handlePopoverToggle = () => {
+    setOpen(!open);
+  };
+
   return (
-    <div>
-      <div className="text-white flex items-center justify-between">
+    <div className="p-4  shadow-lg   ">
+      <div className="text-white flex items-center justify-between py-2">
         <div className="flex items-center">
           <div className="w-12 h-12 overflow-hidden rounded-full">
             <img
@@ -23,41 +33,62 @@ function PostCard({ item }) {
           </div>
           <div className="px-4 text-sm">
             <p className="text-lg">
-              Name : <strong>{item.user?.name}</strong>
-            </p>
-            <p>
-              Title : <strong>{item.postTitle}</strong>
-            </p>
-            <p>
-              Description : <strong>{item.description}</strong>
+              <strong>{item.user?.name}</strong>
             </p>
             <p className="text-gray-400">1h ago</p>
           </div>
         </div>
-        <div>
-          <BsThreeDots />
+        <div className="relative py-3 px-4 group">
+          <BsThreeDots className="hover:text-pink-600 hover:cursor-pointer" />
+          <div className="absolute right-0 hidden group-hover:block bg-pink-600 rounded-md shadow-lg">
+            <div className="text-white px-4 py-2 text-center text-sm hover:overflow-hidden hover:bg-white hover:text-pink-600 cursor-pointer">
+              Edit
+            </div>
+            <div className="text-white px-4 py-2 text-center text-sm hover:overflow-hidden hover:bg-white hover:text-pink-600 cursor-pointer">
+              Delete
+            </div>
+          </div>
         </div>
       </div>
-      <div className="py-6">
+      <div className=" ">
         <div className="rounded-2xl h-[50vh] sm:h-[60vh] lg:h-[70vh] overflow-hidden">
           <img src="/posts/post.jpg" className="object-cover w-full h-full" />
         </div>
       </div>
+      <div className="text-white px-4">
+        <p>
+          <strong>{item.postTitle}</strong>
+        </p>
+        <p className="text-[10px] py-2">{item.description}</p>
+      </div>
 
-      <div className="flex flex-col sm:flex-row justify-between text-lg text-pink-500 font-bold items-center gap-2 sm:gap-4">
-        <button className="w-full sm:w-auto flex-1 rounded-md p-3 sm:p-4 bg-white flex justify-center items-center gap-2 transition hover:bg-pink-50">
-          Like <CiHeart /> <span className="text-blue-700">13.45k</span>
+      <div className="flex justify-between w-[30%] font-sans text-pink-500 font-bold items-center gap-2 sm:gap-4 py-1 ">
+        <button
+          className="flex 
+        ">
+          <CiHeart />
+
+          <span className="text-gray-600 text-[12px] ">1.3k</span>
         </button>
-        <button className="w-full sm:w-auto flex-1 rounded-md p-3 sm:p-4 bg-white flex justify-center items-center gap-2 transition hover:bg-pink-50">
-          Comment <FaRegCommentDots /> <span className="text-blue-700">1.3k</span>
+        <button ref={anchorEl} onClick={handlePopoverToggle} className="flex">
+          <FaRegCommentDots />
+
+          <span className="text-gray-600 text-[12px] ">1.3k</span>
         </button>
-        <Link href={`/chat/${userId}/resever/${item.user?._id}`} className="w-full sm:w-auto flex-1 rounded-md p-3 sm:p-4 bg-white flex justify-center items-center gap-2 transition hover:bg-pink-50">
-          Chat <BsChatHeart /> 
+
+        <Link
+          href={`/chat/${userId}/receiver/${item.user?._id}/reseverName/${item.user?.name}`}
+          className=" flex
+            ">
+          <BsChatHeart className="text-pink-600" />
         </Link>
-        <button className="w-full sm:w-auto flex-1 rounded-md p-3 sm:p-4 bg-white flex justify-center items-center gap-2 transition hover:bg-pink-50">
-          Share <IoMdShareAlt /> <span className="text-blue-700">500</span>
+
+        <button className="flex">
+          <IoMdShareAlt />
+          <span className="text-gray-600 text-[12px] ">1.2k</span>
         </button>
       </div>
+    
     </div>
   );
 }

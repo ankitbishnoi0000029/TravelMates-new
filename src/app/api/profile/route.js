@@ -14,12 +14,7 @@ export async function GET(request) {
     const envToken = process.env.NEXT_APP_SECRET_TOKEN;
     const authToken = HeaderToken.replace("Bearer ", "").trim();
     const decoded = jwt.decode(authToken, { complete: true });
- 
         const userId = decoded.payload.userID
         const user = await User.findOne({_id:userId})    
         return NextResponse.json({ Result: user }, { status: 200 })   
-   
-    
-
-
   }

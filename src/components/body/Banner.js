@@ -1,53 +1,42 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import FromHeader from "../User/FromHeader";
 import Registerform from "../User/Registerform";
+import { CreatePost } from "@/Lib/dataGetApi.js";
+import { Alert, Snackbar } from "@mui/material";
 
 function Banner() {
+
+  const [loading , setLoading] = useState(false)
+  const [success,setSuccess] = useState(false)
   const {register,reset,handleSubmit,formState: { errors },} = useForm();
- const userToken = useSelector((state) => state.MyStore.usertoken);
- const token = localStorage.getItem("token")
- const onSubmit = async (data) => {
-  try {
-    const response = await fetch("http://localhost:3000/api/posts", {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify(data),
-    });
+ const token = useSelector((state) => state.MyStore.usertoken);
+   const userToken = useSelector((state) => state.MyStore.userJwtToken);
+   
+   const onSubmit = (data) => {
+     setLoading(true)
+     CreatePost(data,userToken);
+     setLoading(false);
+     setSuccess(true);
 
-    if (!response.ok) {
-      throw new Error('Failed to create post');
-    }
+     reset();
+   }
 
-    alert("Your post was created successfully");
-    reset();
-  } catch (error) {
-    console.error("Error creating post:", error);
-    alert("An error occurred while creating the post.");
-  }
-};
-
-
+const errorClass = "text-red-600 text-sm w-full text-end";
   return (
-    <section>
-    <div className="lg:grid md:grid h-full sm:block items-center md:grid-cols-12 lg:grid-cols-12 bg-[url('/banner/banner_bg.png')]">
-      <div className="md:col-span-4 lg:col-span-5 mx-auto py-12 w-full flex items-center justify-end sm:justify-center">
-      <div className="w-full max-w-lg p-6 ">
-      <div className="border-4 font-normalx rounded-2xl border-white p-8 text-white">
-        {
-          userToken ? (<>
-              <h1 className="text-2xl lg:text-3xl font-bold py-3">Can you join me?</h1>
-              <p className="pb-2 font-serif text-sm sm:text-base">
-                Create a post for your trip.
-              </p>
+    <section className="">
+    <div className=" flex items-center justify-center border-1 rounded-2xl  overflow-hidden border-white  bg-[url('/banner/banner_bg.png')] ">
+      {/* <div className="md:col-span-6 lg:col-span-5 mx-auto py-12 w-full flex items-center justify-end sm:justify-center">
+      <div className="w-full max-w-lg p-6 "> */}
+      <div className=" font-normal  p-4 text-white backdrop-blur-3xl ">
+        
+              <h1 className="text-2xl lg:text-3xl font-bold py-3">Create a post for your trip.</h1>
+              
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div>
-                  <div className="flex pb-2 flex-col sm:flex-row items-center font-serif justify-between gap-2">
+                  <div className="flex pt-2 flex-col sm:flex-row items-center font-serif justify-between gap-2">
                     <label className="w-full sm:w-1/3">Write Post Title</label>
                     <input
                       {...register("postTitle", {
@@ -57,12 +46,12 @@ function Banner() {
                     />
                   </div>
                   {errors.postTitle && (
-                    <span className="text-red-600 text-sm">
+                    <div className={`${errorClass}`}>
                       {errors.postTitle.message}
-                    </span>
+                    </div>
                   )}
     
-                  <div className="flex pb-2 flex-col sm:flex-row items-center font-serif justify-between gap-2">
+                  <div className="flex pt-2 flex-col sm:flex-row items-center font-serif justify-between gap-2">
                     <label className="w-full sm:w-1/3">Post Description</label>
                     <textarea
                       {...register("description", {
@@ -72,12 +61,12 @@ function Banner() {
                     />
                   </div>
                   {errors.description && (
-                    <span className="text-red-600 text-sm">
+                      <div className={`${errorClass}`}>
                       {errors.description.message}
-                    </span>
+                    </div>
                   )}
     
-                  <div className="flex pb-2 flex-col sm:flex-row items-center font-serif justify-between gap-2">
+                  <div className="flex pt-2 flex-col sm:flex-row items-center font-serif justify-between gap-2">
                     <label className="w-full sm:w-1/3">From</label>
                     <input
                       {...register("from", {
@@ -87,10 +76,10 @@ function Banner() {
                     />
                   </div>
                   {errors.from && (
-                    <span className="text-red-600 text-sm">{errors.from.message}</span>
+                      <div className={`${errorClass}`}>{errors.from.message}</div>
                   )}
     
-                  <div className="flex pb-2 flex-col sm:flex-row items-center font-serif justify-between gap-2">
+                  <div className="flex pt-2 flex-col sm:flex-row items-center font-serif justify-between gap-2">
                     <label className="w-full sm:w-1/3">To</label>
                     <input
                       {...register("to", {
@@ -100,10 +89,10 @@ function Banner() {
                     />
                   </div>
                   {errors.to && (
-                    <span className="text-red-600 text-sm">{errors.to.message}</span>
+                      <div className={`${errorClass}`}>{errors.to.message}</div>
                   )}
     
-                  <div className="flex pb-2 flex-col sm:flex-row items-center font-serif justify-between gap-2">
+                  <div className="flex pt-2 flex-col sm:flex-row items-center font-serif justify-between gap-2">
                     <label className="w-full sm:w-1/3">Upload Image</label>
                     <input
                       type="file"
@@ -113,34 +102,19 @@ function Banner() {
     
                   <div className="p-2 my-4 rounded-lg bg-pink-600">
                     <button type="submit" className="w-full text-sm sm:text-base">
-                      Create Post
+                      {loading ? "loading...." : "Create Post"}
                     </button>
                   </div>
                 </div>
               </form>
-              </> ):(<>
-              <FromHeader/>
-              <Registerform />
-              </>
-             )
-        }
+            
        
             </div>
           </div>
-      </div>
-  
-      <div className="col-span-7 px-10 w-full">
-        <div className="grid h-full justify-items-center items-end">
-          <img
-            className="relative z-10 h-[90%] w-full object-contain"
-            src="banner/banner.png"
-            alt="Banner"
-          />
-        </div>
-      </div>
-    </div>
+      {/* </div>
+    </div> */}
+ 
   </section>
-  
   );
 }
 

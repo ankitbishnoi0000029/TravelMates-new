@@ -6,7 +6,7 @@ import MyPosts from './posts/page'
 function page() {
   return (
    <>
-   <Banner />
+   
       <Posts />
    </>
   )

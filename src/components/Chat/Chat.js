@@ -1,150 +1,123 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { BsSendFill } from "react-icons/bs";
-import { useEffect, useState, useMemo } from "react";
 import { getSocket } from "../../../socket";
-import { Chating_data } from "@/Lib/dataGetApi.js";
+import storeChat, {
+  Chating_data,
+  friendList,
+  getUserDetails,
+  userProfile,} from "@/Lib/dataGetApi.js";
 import { useParams } from "next/navigation";
-import axios from "axios";
+import { useSelector } from "react-redux";
+import MessageShow from "./MessageShow";
+import Friendlist from "./Friendlist";
 
 function Chat() {
   const [input, setInput] = useState("");
-  const [received, setReceived] = useState([]);
-  const [chat, setChat] = useState();
-  const router = useParams();
-  
-  const sender = router.chat[1]
-  const resever = router.chat[3]
- const token = localStorage.getItem("token");
- 
+  const [messages, setMessages] = useState([]);
 
+  const router = useParams();
+  const chatParams = router?.chat || [];
+  const sender = chatParams[1] || "defaultSenderId";
+  const receiver = chatParams[3] || "defaultReceiverId";
+  const receivername = chatParams[5] || "defaultReceiverId";
+  const userToken = useSelector((state) => state.MyStore.userJwtToken);
+
+  const [senderUser, setSenderUserDetail] = useState();
+  const [friendslist, setfriendsList] = useState([]);
+  const [senderSocketid, setsenderSocketId] = useState();
+
+
+
+  const SenderUserDetail = async () => {
+    const user = await userProfile(userToken);
+    setSenderUserDetail(user.name);
+    setsenderSocketId(user.socketUserId);
+  };
+  const socket = useMemo(() => getSocket().connect(), []);
   useEffect(() => {
-    getChating();
+    getchat();
+    socket.emit("user_connected", { sender, receiver });
+    friend();
+    SenderUserDetail();
   }, []);
-  const getChating = async () => {
-    const data = await Chating_data(resever);
-    setChat(data);
+
+  // emit event
+
+  const friend = async () => {
+    const myFrnd = await friendList(sender, userToken);    
+    setfriendsList(myFrnd)
   };
 
-
-  const socket = useMemo(() => {
-    const socket = getSocket();
-    return socket.connect();
-  }, []);
-
-  useEffect(() => {
-    console.log("socket=>", socket);
-    socket.on("hello", (payload) => {
-      console.log('payload', payload);
-      
-      setReceived((prevMessages) => [...prevMessages, payload]);
-
-      // console.log('payload',  {
-      //   message: input,
-      //   sender:sender,
-      //   reciever: resever, // Ensure proper spelling for "receiver"
-      // });
-      // return;
-      
-      const chatStore = async () => {
-        try {
-          const storeChat = await axios.post(
-            "http://localhost:3000/api/chating",
-            {
-              message: payload,
-              sender:sender,
-              reciever: resever, // Ensure proper spelling for "receiver"
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json", // Optionally add Content-Type header if not set automatically
-              },
-            }
-          );
-      
-          console.log("Chat stored successfully:", storeChat.data);
-        } catch (error) {
-          console.error("Error storing chat:", error);
-        }
-      };
-      
-      chatStore()
-      setInput("");
-    });
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+  const getchat = async () => {
+    const chatdata = await Chating_data(receiver, userToken);
+    setMessages(chatdata);
+  };
 
   const sendMessage = (e) => {
-    if (input) {
-      e.preventDefault();
-      socket.emit("hello", input);
+    e.preventDefault();
+    if (!socket.connected) {
+      alert("Socket connection is unavailable. Please try again.");
+      return;
+    }
+    if (input.trim()) {
+      socket.emit("hello", {
+        message: input,
+        sender,
+        receiver,
+        to: receiver,
+      });
+      const data = {
+        message: input,
+        sender,
+        receiver,
+      }
+      storeChat(userToken,{
+        message: input,
+        sender,
+        receiver,
+      });
+      setInput("");
+      setMessages((prevMessages) => [...prevMessages, data])
     } else {
-      alert("plase enter some ");
+      alert("Please enter a message");
     }
   };
+  useEffect(() => {
+    socket.on("hello", (payload,arg) => {
+      if(arg.sender == receiver)
+        setMessages((prevMessages) => [...prevMessages, arg])
+    });
 
+    // return () => {
+    //   if (socket.connected) {
+    //     socket.disconnect();
+    //   }
+    // };
+  }, []);
   return (
-    <section className="bg-[#4a2184] text-white min-h-screen flex items-center justify-center">
+    <section className="bg-[url('/banner/banner_bg.png')] text-white min-h-screen flex items-center h-full justify-center">
       <div className="container p-4">
-        <div>
-          Sender : {sender}
-        </div>
-        <div>
-          Resever : {resever}
-        </div>
-        <div className="grid grid-cols-12 rounded-lg bg-[#391965] gap-4">
-          <div className="col-span-4 p-4 rounded-lg flex flex-col space-y-4">
-            <h2 className="text-lg font-semibold">Chat Users</h2>
-            <p>Status: {socket.connected ? "connected" : "disconnected"}</p>
-
-            <ul className="space-y-2">
-              <li className="p-3 rounded-lg bg-pink-600 text-white hover:bg-white hover:text-pink-600 max-w-max ">
-                {socket.id}
-              </li>
-            </ul>
-          </div>
-
-          <div className="col-span-8 p-4 bg-[#4a2184] rounded-lg flex flex-col  ">
-            <div className="flex-1 overflow-y-auto p-4 bg-[#391965] rounded-lg ">
-              <div className="space-y-3">
-                {chat?.map((item, index) => {
-                  return (
-                    <div
-                      key={index}
-                      className="bg-white text-pink-600 p-3 rounded-lg self-end max-w-max">
-                      {item.message}
-                    </div>
-                  );
-                })}
-                {received.map((item, index) => (
-                  <div
-                    key={index}
-                    className="bg-white text-pink-600 p-3 rounded-lg self-start max-w-max">
-                    {item}
-                  </div>
-                ))}
-                <div className="float-end bg-pink-600 p-3 rounded-lg self-start max-w-max">
-                  I'm good, thanks! How about you?
-                </div>
-              </div>
-            </div>
-
-            <form className="mt-4 flex items-center space-x-2">
+        <div className="md:grid md:grid-cols-12 lg:grid lg:grid-cols-12 rounded-lg  gap-4  lg:h-[80vh] ">
+         <Friendlist  friendslist={friendslist}  socket={socket} />
+          <div className="col-span-8  bg-[#4a2184] flex flex-col  h-[80vh] ">
+              <MessageShow sender={sender} messages={messages} />
+            
+            <form
+              className="mt-4 flex items-center space-x-2"
+              onSubmit={sendMessage}>
               <input
                 type="text"
-                onChange={(e) => setInput(e.target.value)}
                 value={input}
+                onChange={(e) => setInput(e.target.value)}
                 className="flex-1 p-3 rounded-lg text-pink-600 bg-white outline-none focus:ring-2 focus:ring-[#614aa8]"
                 placeholder="Type a message..."
               />
               <button
-                onClick={sendMessage}
-                className="p-3 items-center gap-2 flex bg-[#614aa8] rounded-lg hover:bg-[#814ac8] transition">
+                type="submit"
+                className="p-3 flex items-center gap-2 bg-[#614aa8] rounded-lg hover:bg-[#814ac8] transition">
                 Send
-                <BsSendFill className="text-pink-600 " />
+                <BsSendFill className="text-pink-600" />
               </button>
             </form>
           </div>

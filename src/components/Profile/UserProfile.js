@@ -4,19 +4,20 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
  function UserProfile() {
-  const userToken = useSelector((state) => state.MyStore.usertoken);
+  const tokenTrue = useSelector((state) => state.MyStore.usertoken);
+      const userToken = useSelector((state) => state.MyStore.userJwtToken);
+  
   const [user, setUser] = useState();
   const getProfile = async() => {
-    const data = await userProfile();
-    const userId = localStorage.setItem('userId',data._id)
+    const data = await userProfile(userToken);
     setUser(data)
     
   }
    useEffect(() => {
-    if(!userToken) return
+    if(!tokenTrue) return
      getProfile()
 
-    }, [userToken]); 
+    }, [tokenTrue]); 
   
 
   return (
